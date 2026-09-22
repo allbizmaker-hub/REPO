@@ -3,7 +3,6 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import { FirebaseProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
-import { XakcodeAuthProvider } from '@/contexts/xakcode-auth-context';
 import { FaviconImageReplacer } from '@/components/FaviconImageReplacer';
 
 const poppins = Poppins({
@@ -25,10 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={poppins.className}>
         <FaviconImageReplacer />
         <FirebaseProvider>
-          <XakcodeAuthProvider>
-            {children}
-            <Toaster />
-          </XakcodeAuthProvider>
+          {children}
+          <Toaster />
         </FirebaseProvider>
       </body>
     </html>
