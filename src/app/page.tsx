@@ -14,7 +14,6 @@ import {
   Smile
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { GlitchLogo } from "@/components/ui/glitch-logo";
 import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from "@/firebase";
 import { doc, updateDoc, serverTimestamp, query, collection, orderBy, limit, where } from "firebase/firestore";
 import { Badge } from "@/components/ui/badge";
@@ -38,8 +37,6 @@ const JOKES = [
 ];
 
 export default function XakteirEntry() {
-
-
   return <XakteirDashboard />;
 }
 
@@ -113,7 +110,7 @@ function XakteirDashboard() {
     <div className="min-h-screen flex flex-col items-center animate-fade-in relative overflow-x-hidden text-white pb-32 px-4 md:px-0">
       <main className="flex-1 w-full max-w-7xl px-2 md:px-8 flex flex-col items-center pt-[6vh] md:pt-[12vh] space-y-12 md:space-y-20 relative z-10">
         <div className="flex flex-col items-center gap-6 md:gap-10 group cursor-pointer" onClick={() => window.location.reload()}>
-          <GlitchLogo className="scale-[0.7] md:scale-[2]" />
+          <img src="/Copilot_20260202_133906.png" alt="Xakteir X" className="w-20 h-20 md:w-40 md:h-40 object-cover rounded" />
           <div className="text-center space-y-3 md:space-y-4">
             <h1 className="text-4xl md:text-9xl font-black tracking-tighter uppercase italic leading-none text-white flex items-center justify-center gap-4 md:gap-8 drop-shadow-[0_0_80px_rgba(255,255,255,0.4)]">
               XAKTEIR <BadgeCheck className="w-6 h-6 md:w-12 md:h-12 text-blue-500 fill-current animate-pulse shadow-2xl" />
@@ -133,15 +130,15 @@ function XakteirDashboard() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search apps and files..." 
-              className="h-16 md:h-24 w-full bg-black/60 backdrop-blur-3xl border-4 md:border-8 border-white/10 hover:border-primary hover:shadow-[0_0_100px_rgba(var(--primary),0.4)] focus:border-primary focus:shadow-[0_0_120px_rgba(var(--primary),0.5)] rounded-full text-base md:text-3xl pl-12 md:pl-20 pr-10 md:pr-12 font-black italic transition-all outline-none text-white placeholder:text-white/15"
+              className="h-16 md:h-24 w-full bg-black/60 backdrop-blur-3xl border-4 md:border-8 border-white/10 hover:border-primary hover:shadow-[0_0_100px_rgba(var(--primary),0.4)] focus:border-primary rounded-full pl-16 md:pl-24 text-base md:text-3xl font-black italic text-white"
             />
             <button type="submit" className="absolute left-4 md:left-8">
               <Search className="w-5 h-5 md:w-8 md:h-8 text-white/20 group-focus-within:text-primary transition-all duration-500" />
             </button>
           </form>
           <div className="flex flex-wrap justify-center gap-3 md:gap-8 mt-8 md:mt-14 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-             <Button onClick={() => window.location.href = '/search'} variant="ghost" className="rounded-full px-8 md:px-16 h-10 md:h-16 text-[8px] md:text-[11px] font-black uppercase tracking-[0.3em] text-white/50 hover:bg-primary/10 hover:text-primary border-2 border-white/5 transition-all shadow-xl italic">Search</Button>
-             <Button onClick={() => window.location.href = '/ai-chat'} variant="ghost" className="rounded-full px-8 md:px-16 h-10 md:h-16 text-[8px] md:text-[11px] font-black uppercase tracking-[0.3em] text-white/50 hover:bg-primary/10 hover:text-primary border-2 border-white/5 transition-all shadow-xl italic">Xak AI</Button>
+             <Button onClick={() => window.location.href = '/search'} variant="ghost" className="rounded-full px-8 md:px-16 h-10 md:h-16 text-[8px] md:text-[11px] font-black uppercase tracking-[0.4em] border-2 border-white/10 bg-white/5 hover:bg-white/10 text-white/90">Search</Button>
+             <Button onClick={() => window.location.href = '/ai-chat'} variant="ghost" className="rounded-full px-8 md:px-16 h-10 md:h-16 text-[8px] md:text-[11px] font-black uppercase tracking-[0.4em] border-2 border-white/10 bg-white/5 hover:bg-white/10 text-white/90">Ask Xak AI</Button>
           </div>
         </div>
 
@@ -162,7 +159,7 @@ function XakteirDashboard() {
             ) : (
               <div className="space-y-4 md:space-y-6">
                 {sortedFeedItems.slice(0, 3).map(item => (
-                  <div key={item.id} className="p-6 bg-white/5 rounded-[1.8rem] md:rounded-[2.2rem] border-2 border-white/5 hover:border-primary/40 hover:bg-primary/5 transition-all group cursor-pointer shadow-xl">
+                  <div key={item.id} className="p-6 bg-white/5 rounded-[1.8rem] md:rounded-[2.2rem] border-2 border-white/5 hover:border-primary/40 hover:bg-primary/5 transition-all group cursor-pointer">
                     <h3 className="text-xs md:text-lg font-black text-white uppercase italic group-hover:text-primary transition-colors leading-tight">{item.title}</h3>
                     <p className="text-[9px] md:text-xs text-white/40 mt-2 line-clamp-1 italic font-medium tracking-wide">{item.content}</p>
                   </div>
@@ -171,7 +168,7 @@ function XakteirDashboard() {
             )}
           </Card>
 
-          <Card className="glass-card rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 space-y-6 md:space-y-10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] bg-indigo-600/5 border-4 border-indigo-500/20 group hover:border-indigo-500/40 transition-all">
+          <Card className="glass-card rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 space-y-6 md:space-y-10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] bg-indigo-600/5 border-4 border-indigo-500/20 group">
             <div className="flex items-center gap-4">
               <HelpCircle className="w-6 h-6 text-indigo-400 group-hover:rotate-12 transition-transform" />
               <h2 className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.5em] text-indigo-400 italic">Riddle</h2>
@@ -183,12 +180,12 @@ function XakteirDashboard() {
                    <p className="text-[10px] md:text-base font-black uppercase text-indigo-400 italic">Solution: {RIDDLES[dailyIndex].a}</p>
                 </div>
               ) : (
-                <Button onClick={() => setShowRiddleAnswer(true)} variant="ghost" className="h-12 md:h-14 px-8 rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] border-2 border-white/5 hover:bg-indigo-500/20 hover:text-white transition-all shadow-md">Show Answer</Button>
+                <Button onClick={() => setShowRiddleAnswer(true)} variant="ghost" className="h-12 md:h-14 px-8 rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] border-2 border-indigo-500/30 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20">Reveal</Button>
               )}
             </div>
           </Card>
 
-          <Card className="glass-card rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 space-y-6 md:space-y-10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] bg-amber-600/5 border-4 border-amber-500/20 group hover:border-amber-500/40 transition-all">
+          <Card className="glass-card rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-12 space-y-6 md:space-y-10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] bg-amber-600/5 border-4 border-amber-500/20 group">
             <div className="flex items-center gap-4">
               <Smile className="w-6 h-6 text-amber-400 group-hover:animate-bounce transition-transform" />
               <h2 className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.5em] text-amber-400 italic">Joke</h2>
@@ -204,7 +201,7 @@ function XakteirDashboard() {
       </main>
 
       <Dialog open={needsMigration} onOpenChange={() => {}}>
-        <DialogContent className="rounded-[2.5rem] md:rounded-[5rem] border-4 md:border-[12px] border-white/10 p-0 overflow-hidden bg-zinc-950 max-w-2xl shadow-[0_100px_200px_rgba(0,0,0,0.9)] text-white animate-in zoom-in-95">
+        <DialogContent className="rounded-[2.5rem] md:rounded-[5rem] border-4 md:border-[12px] border-white/10 p-0 overflow-hidden bg-zinc-950 max-w-2xl shadow-[0_100px_200px_rgba(0,0,0,0.9)] text-white">
            <div className="p-10 md:p-20 bg-zinc-900 border-b-8 border-white/10 text-center relative overflow-hidden">
               <div className="absolute inset-0 arcade-grid opacity-10" />
               <DialogTitle className="text-3xl md:text-7xl font-black uppercase italic tracking-tighter relative z-10 leading-none">Account Security</DialogTitle>
@@ -219,12 +216,12 @@ function XakteirDashboard() {
                   value={migrationEmail}
                   onChange={(e) => setMigrationEmail(e.target.value)}
                   placeholder="name@email.com" 
-                  className="h-16 md:h-24 bg-black/40 border-4 md:border-8 border-white/10 rounded-[1.5rem] md:rounded-[2.5rem] px-8 md:px-12 font-black italic text-base md:text-3xl shadow-inner text-white placeholder:text-white/10 focus:border-primary transition-all" 
+                  className="h-16 md:h-24 bg-black/40 border-4 md:border-8 border-white/10 rounded-[1.5rem] md:rounded-[2.5rem] px-8 md:px-12 font-black italic text-base md:text-3xl shadow-inner"
                 />
                 <Button 
                   onClick={handleMigration} 
                   disabled={!migrationEmail.includes("@") || isMigrating}
-                  className="w-full h-20 md:h-32 bg-primary hover:bg-primary/90 text-white rounded-xl md:rounded-[2.5rem] font-black uppercase text-xl md:text-3xl italic shadow-[0_20px_60px_rgba(var(--primary),0.4)] border-b-[12px] md:border-b-[24px] border-primary/20 active:border-b-0 active:translate-y-4 transition-all"
+                  className="w-full h-20 md:h-32 bg-primary hover:bg-primary/90 text-white rounded-xl md:rounded-[2.5rem] font-black uppercase text-xl md:text-3xl italic shadow-[0_20px_60px_rgba(var(--primary),0.6)]"
                 >
                   {isMigrating ? <Loader2 className="animate-spin w-10 h-10 md:w-16 md:h-16" /> : "Update Identity"}
                 </Button>
