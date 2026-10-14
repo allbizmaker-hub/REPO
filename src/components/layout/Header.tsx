@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { navigateTo } from "@/lib/navigation";
-import { 
-  LayoutGrid, 
+import {
+  LayoutGrid,
   Bot,
   Mail,
   Gamepad2,
@@ -77,11 +77,9 @@ import { triggerCommandCenter } from "@/components/CommandCenter";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RenderHat } from "@/components/RenderHat";
 import { useSuiteStore, useUIStore } from "@/lib/store";
-
 import { AnimatedAppIcon } from "@/components/ui/AnimatedAppIcon";
 
 export const APPS = [
-  // Main Apps
   { name: "Mail", iconName: "mail", href: "/mail", color: "text-blue-400", bg: "bg-blue-400/10" },
   { name: "Chat", iconName: "chat", href: "/chat", color: "text-emerald-400", bg: "bg-emerald-400/10" },
   { name: "Xak AI", iconName: "ai-chat", href: "/ai-chat", color: "text-primary", bg: "bg-primary/10" },
@@ -89,8 +87,6 @@ export const APPS = [
   { name: "Games", iconName: "games", href: "/games", color: "text-purple-400", bg: "bg-purple-400/10" },
   { name: "Maps", iconName: "map", href: "/map", color: "text-emerald-400", bg: "bg-emerald-400/10" },
   { name: "Apps", iconName: "apps", href: "/apps", color: "text-indigo-400", bg: "bg-indigo-400/10" },
-  
-  // Other Apps
   { name: "Search", iconName: "search", href: "/search", color: "text-blue-400", bg: "bg-blue-400/10" },
   { name: "Whiteboard", iconName: "whiteboard", href: "/whiteboard", color: "text-amber-400", bg: "bg-amber-400/10" },
   { name: "Studio", iconName: "default", href: "/studio", color: "text-purple-500", bg: "bg-purple-500/10" },
@@ -146,27 +142,12 @@ function AppLauncherContent({ router }: { router: any }) {
       </div>
       <div className="flex-1 max-h-[380px] overflow-y-auto pr-1">
         <div className="p-5 grid grid-cols-3 gap-3">
-          {filteredApps.map(app => {
-            return (
-              <button 
-                key={app.name}
-                onClick={() => { 
-                  navigateTo(app.href, router);
-                }} 
-                className={cn(
-                  "p-3 rounded-2xl flex flex-col items-center gap-2 transition-all hover:bg-white/5 hover:scale-105 group/btn border-2 border-transparent hover:border-white/5 shadow-md", 
-                  app.bg
-                )}
-              >
-                <AnimatedAppIcon 
-                  iconName={app.iconName} 
-                  className="w-10 h-10 bg-white rounded-xl shadow-sm transition-transform group-hover/btn:scale-110 duration-300" 
-                  size={40} 
-                />
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground group-hover/btn:text-white truncate w-full text-center">{app.name}</span>
-              </button>
-            );
-          })}
+          {filteredApps.map(app => (
+            <button key={app.name} onClick={() => navigateTo(app.href, router)} className={cn("p-3 rounded-2xl flex flex-col items-center gap-2 transition-all hover:bg-white/5 hover:scale-105 group/btn border-2 border-transparent hover:border-white/5 shadow-md", app.bg)}>
+              <AnimatedAppIcon iconName={app.iconName} className="w-10 h-10 bg-white rounded-xl shadow-sm transition-transform group-hover/btn:scale-110 duration-300" size={40} />
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground group-hover/btn:text-white truncate w-full text-center">{app.name}</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -183,8 +164,6 @@ export function Header() {
   const { isFocusMode } = useSuiteStore();
   const { headerStyle, showLogo, pinnedApps } = useUIStore();
   const { toast } = useToast();
-
-  // Multi-account switcher state
   const [accounts, setAccounts] = useState<any[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<string | null>(null);
 
@@ -193,11 +172,7 @@ export function Header() {
       const accs = localStorage.getItem("xakteir_accounts");
       const activeId = localStorage.getItem("xakteir_active_account_id");
       if (accs) {
-        try {
-          setAccounts(JSON.parse(accs));
-        } catch (e) {
-          console.error("Error parsing accounts JSON", e);
-        }
+        try { setAccounts(JSON.parse(accs)); } catch (e) { console.error("Error parsing accounts JSON", e); }
       }
       if (activeId) setActiveAccountId(activeId);
     };
@@ -206,12 +181,10 @@ export function Header() {
     return () => window.removeEventListener("xakteir-accounts-changed", updateAccounts);
   }, []);
 
-
   const [isSwitching, setIsSwitching] = useState(false);
 
   const handleSwitchAccount = async (acc: any) => {
     if (user && user.uid === acc.uid) return;
-    
     setIsSwitching(true);
     const vaultStr = localStorage.getItem('xakteir_vault');
     if (!vaultStr) {
@@ -219,18 +192,11 @@ export function Header() {
       navigateTo(`/auth?email=${encodeURIComponent(acc.email)}`, router);
       return;
     }
-    
     let vault: any = {};
-    try {
-      vault = JSON.parse(vaultStr);
-    } catch (e) {
-      console.error("Error parsing vault JSON", e);
-    }
+    try { vault = JSON.parse(vaultStr); } catch (e) { console.error("Error parsing vault JSON", e); }
     const savedCreds = vault[acc.uid];
-    
     if (savedCreds) {
       toast({ title: "Switching Profiles...", description: `Logging in to ${acc.displayName}` });
-      
       try {
         if (savedCreds.provider === 'password' && savedCreds.password) {
           await signInWithEmailAndPassword(auth, savedCreds.email, savedCreds.password);
@@ -251,8 +217,8 @@ export function Header() {
     setIsSwitching(false);
   };
 
-  useEffect(() => { 
-    setMounted(true); 
+  useEffect(() => {
+    setMounted(true);
     const handler = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", handler);
     return () => document.removeEventListener("fullscreenchange", handler);
@@ -265,11 +231,9 @@ export function Header() {
 
   const { data: unreadNotifs } = useCollection(unreadCountQuery);
   const totalUnreadCount = unreadNotifs?.length || 0;
-
   const cleanDisplayName = user?.displayName?.replace(/^@+/, "") || "User";
 
   const SUPER_ADMIN_EMAILS = ["admin@xakteir.com", "admin2@xakteir.com"];
-
   const adminRoleRef = useMemoFirebase(() => {
     if (!firestore || !user) return null;
     return doc(firestore, "admins", user.uid);
@@ -288,18 +252,14 @@ export function Header() {
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().catch(() => {});
     }
   };
 
   const pathname = usePathname();
-
   if (!mounted) return null;
   if (isFocusMode || pathname?.startsWith('/xaksports') || pathname?.startsWith('/xakarena')) return null;
-
 
   const renderAppsLauncher = () => (
     <>
@@ -308,7 +268,7 @@ export function Header() {
           <PopoverTrigger asChild>
             <Button variant="ghost" className="h-12 px-8 bg-zinc-900/60 border-2 border-white/10 rounded-2xl transition-all flex items-center gap-4 shadow-xl group">
               <div className="w-5 h-5 grid grid-cols-3 gap-[3px] transition-transform duration-300 group-hover:scale-110 shrink-0">
-                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot shadow-[0_0_4px_rgba(129,140,248,0.2)]" style={{ animationDelay: "0s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "0s" }}></div>
                 <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-1s" }}></div>
                 <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-2s" }}></div>
                 <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-3s" }}></div>
@@ -330,25 +290,23 @@ export function Header() {
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-             <Button variant="ghost" size="icon" className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl group">
-                <div className="w-5 h-5 grid grid-cols-3 gap-[3px] transition-transform duration-300 group-hover:scale-110 shrink-0">
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot shadow-[0_0_4px_rgba(129,140,248,0.2)]" style={{ animationDelay: "0s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-1s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-2s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-3s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-4s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-5s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-6s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-7s" }}></div>
-                  <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-8s" }}></div>
-                </div>
-             </Button>
+            <Button variant="ghost" size="icon" className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl group">
+              <div className="w-5 h-5 grid grid-cols-3 gap-[3px] transition-transform duration-300 group-hover:scale-110 shrink-0">
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "0s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-1s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-2s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-3s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-4s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-5s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-6s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-7s" }}></div>
+                <div className="rounded-[2px] w-1.5 h-1.5 animate-launcher-dot" style={{ animationDelay: "-8s" }}></div>
+              </div>
+            </Button>
           </SheetTrigger>
           <SheetContent side="left" className="bg-[#0a0a15] border-white/10 p-0 w-[400px] shadow-[0_0_100px_rgba(0,0,0,0.8)]">
-             <SheetHeader className="sr-only">
-                <SheetTitle>App Launcher</SheetTitle>
-             </SheetHeader>
-             <AppLauncherContent router={router} />
+            <SheetHeader className="sr-only"><SheetTitle>App Launcher</SheetTitle></SheetHeader>
+            <AppLauncherContent router={router} />
           </SheetContent>
         </Sheet>
       </div>
@@ -369,9 +327,7 @@ export function Header() {
 
   const renderLogo = () => (
     <Link href="/" className="pointer-events-auto group flex items-center gap-3">
-      <span className="text-3xl sm:text-[2.5rem] font-black tracking-tighter text-white uppercase italic leading-none transition-all group-hover:text-primary drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-        Xakteir
-      </span>
+      <img src="/image.png" alt="Xakteir" className="h-10 md:h-14 object-contain" />
     </Link>
   );
 
@@ -380,11 +336,7 @@ export function Header() {
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl relative group shadow-xl">
           <Bell className={cn("w-6 h-6", totalUnreadCount > 0 ? "text-primary animate-pulse" : "text-white/40 group-hover:text-primary")} />
-          {totalUnreadCount > 0 && (
-            <span className="absolute -top-2 -right-2 w-5 h-5 bg-primary text-black text-[10px] font-black flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(var(--primary),0.6)] border-2 border-black">
-              {totalUnreadCount}
-            </span>
-          )}
+          {totalUnreadCount > 0 && <span className="absolute -top-2 -right-2 w-5 h-5 bg-primary text-black text-[10px] font-black flex items-center justify-center rounded-full shadow-[0_0_20px_rgba(var(--primary),0.6)]">{totalUnreadCount}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0 glass-card rounded-[2.5rem] mt-6 border-4 border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden" align="end">
@@ -395,18 +347,13 @@ export function Header() {
         <ScrollArea className="max-h-[400px]">
           <div className="divide-y-2 divide-white/5">
             {totalUnreadCount === 0 ? (
-              <div className="p-16 text-center opacity-20 text-white">
-                <CheckCircle2 className="w-12 h-12 mx-auto mb-4" />
-                <p className="text-[12px] font-black uppercase tracking-[0.4em]">No alerts</p>
+              <div className="p-16 text-center opacity-20 text-white"><CheckCircle2 className="w-12 h-12 mx-auto mb-4" /><p className="text-[12px] font-black uppercase tracking-[0.4em]">No alerts</p></div>
+            ) : unreadNotifs?.slice(0, 5).map(notif => (
+              <div key={notif.id} className="p-6 hover:bg-white/5 transition-all group cursor-pointer relative overflow-hidden text-white">
+                <h4 className="text-[13px] font-black uppercase italic text-white line-clamp-1">{notif.title}</h4>
+                <p className="text-[11px] text-white/40 mt-1.5 line-clamp-2 leading-relaxed">{notif.message}</p>
               </div>
-            ) : (
-              unreadNotifs?.slice(0, 5).map(notif => (
-                <div key={notif.id} className="p-6 hover:bg-white/5 transition-all group cursor-pointer relative overflow-hidden text-white">
-                  <h4 className="text-[13px] font-black uppercase italic text-white line-clamp-1">{notif.title}</h4>
-                  <p className="text-[11px] text-white/40 mt-1.5 line-clamp-2 leading-relaxed">{notif.message}</p>
-                </div>
-              ))
-            )}
+            ))}
           </div>
         </ScrollArea>
       </PopoverContent>
@@ -437,63 +384,32 @@ export function Header() {
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-2 glass-card rounded-[2.5rem] mt-6 border-4 border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden relative" align="end">
-        {isSwitching && (
-          <div className="absolute inset-0 bg-black/60 z-50 flex items-center justify-center rounded-[2.5rem] backdrop-blur-sm">
-             <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          </div>
-        )}
-        <div className="p-4 border-b-2 border-white/5 bg-black/40 mb-3 rounded-t-[1.5rem] text-white text-center">
-           <p className="text-[10px] font-black uppercase tracking-widest text-primary italic">Profiles ({accounts.length}/5)</p>
-        </div>
-
+        {isSwitching && <div className="absolute inset-0 bg-black/60 z-50 flex items-center justify-center rounded-[2.5rem] backdrop-blur-sm"><Loader2 className="w-8 h-8 text-primary animate-spin" /></div>}
+        <div className="p-4 border-b-2 border-white/5 bg-black/40 mb-3 rounded-t-[1.5rem] text-white text-center"><p className="text-[10px] font-black uppercase tracking-widest text-primary italic">Profiles ({accounts.length}/5)</p></div>
         <div className="space-y-1 max-h-[200px] overflow-y-auto px-1.5">
           {accounts.map((acc: any) => (
-            <div 
-              key={acc.uid} 
-              onClick={() => handleSwitchAccount(acc)}
-              className={cn(
-                "flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all hover:bg-white/5",
-                activeAccountId === acc.uid ? "bg-white/5 border border-white/10" : "border border-transparent"
-              )}
-            >
+            <div key={acc.uid} onClick={() => handleSwitchAccount(acc)} className={cn("flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all hover:bg-white/5", activeAccountId === acc.uid ? "bg-white/5 border border-white/10" : "border border-transparent")}>
               <div className="flex items-center gap-3 min-w-0">
-                <Avatar className="w-8 h-8 rounded-lg border border-white/10">
-                  <AvatarImage src={acc.photoURL} />
-                  <AvatarFallback className="bg-primary text-white text-xs font-black">{acc.displayName?.[0]}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex flex-col text-left">
-                  <span className="text-xs font-bold text-white truncate">{acc.displayName}</span>
-                  <span className="text-[9px] text-white/40 truncate">{acc.email}</span>
-                </div>
+                <Avatar className="w-8 h-8 rounded-lg border border-white/10"><AvatarImage src={acc.photoURL} /><AvatarFallback className="bg-primary text-white text-xs font-black">{acc.displayName?.[0]}</AvatarFallback></Avatar>
+                <div className="min-w-0 flex flex-col text-left"><span className="text-xs font-bold text-white truncate">{acc.displayName}</span><span className="text-[9px] text-white/40 truncate">{acc.email}</span></div>
               </div>
               {activeAccountId === acc.uid && <Check className="w-4 h-4 text-primary shrink-0" />}
             </div>
           ))}
         </div>
-
         {accounts.length < 5 && (
-          <button onClick={() => { navigateTo('/auth/add-acct', router); }} className="w-[calc(100%-12px)] mx-1.5 flex items-center justify-center gap-2 p-3 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-all border border-dashed border-primary/20 hover:border-primary/40 mt-1">
-            <Plus className="w-4 h-4" /> Add Profile
-          </button>
+          <button onClick={() => navigateTo('/auth/add-acct', router)} className="w-[calc(100%-12px)] mx-1.5 flex items-center justify-center gap-2 p-3 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-white/80"><Plus className="w-4 h-4" /> Add Profile</button>
         )}
-
         <div className="h-0.5 bg-white/5 my-3 mx-1.5" />
-
         <div className="space-y-1 p-1.5 text-white">
-           <button onClick={() => navigateTo('https://account.xakteir.com', router)} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-white transition-all text-left">
-              <UserIcon className="w-4 h-4 text-primary" /> Profile
-           </button>
-           <button onClick={() => navigateTo('/settings', router)} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-white transition-all text-left">
-              <Settings className="w-4 h-4 text-primary" /> Settings
-           </button>
-           <button onClick={() => { auth && signOut(auth); localStorage.removeItem("xakteir_accounts"); localStorage.removeItem("xakteir_active_account_id"); window.dispatchEvent(new Event("xakteir-accounts-changed")); navigateTo('/', router); }} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-all text-left">
-              <LogOut className="w-4 h-4" /> Sign Out
-           </button>
+          <button onClick={() => navigateTo('https://account.xakteir.com', router)} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-white/80"><UserIcon className="w-4 h-4 text-primary" /> Profile</button>
+          <button onClick={() => navigateTo('/settings', router)} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-white/5 text-[10px] font-black uppercase tracking-widest text-white/80"><Settings className="w-4 h-4 text-primary" /> Settings</button>
+          <button onClick={() => { auth && signOut(auth); localStorage.removeItem("xakteir_accounts"); localStorage.removeItem("xakteir_active_account_id"); window.dispatchEvent(new Event("xakteir-accounts-changed")); navigateTo('/', router); }} className="w-full flex items-center gap-4 p-3.5 rounded-2xl hover:bg-rose-500/10 text-[10px] font-black uppercase tracking-widest text-white/80"><LogOut className="w-4 h-4" /> Sign Out</button>
         </div>
       </PopoverContent>
     </Popover>
   ) : (
-    <Link href="/auth"><Button className="bg-primary hover:bg-primary/90 h-14 px-12 rounded-[2rem] font-black uppercase text-xs tracking-[0.3em] text-white shadow-2xl border-b-8 border-primary/20 active:border-b-0 transition-all">Sign In</Button></Link>
+    <Link href="/auth"><Button className="bg-primary hover:bg-primary/90 h-14 px-12 rounded-[2rem] font-black uppercase text-xs tracking-[0.3em] text-white shadow-2xl border-b-8 border-primary/20">Sign In</Button></Link>
   );
 
   const renderPinnedApps = () => {
@@ -504,14 +420,7 @@ export function Header() {
           const app = APPS.find(a => a.name === appName);
           if (!app) return null;
           return (
-            <Button 
-              key={appName} 
-              onClick={() => navigateTo(app.href, router)}
-              variant="ghost" 
-              size="icon" 
-              title={app.name}
-              className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl group hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
-            >
+            <Button key={appName} onClick={() => navigateTo(app.href, router)} variant="ghost" size="icon" title={app.name} className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl group hover:bg-white/10 transition-all flex items-center justify-center shrink-0">
               <AnimatedAppIcon iconName={app.iconName} className="w-6 h-6 group-hover:scale-110 transition-transform" size={24} />
             </Button>
           );
@@ -522,35 +431,19 @@ export function Header() {
 
   const renderHamburgerLayout = () => (
     <>
-      <div className="flex items-center gap-6 z-20">
-        {showLogo && renderLogo()}
-      </div>
+      <div className="flex items-center gap-6 z-20">{showLogo && renderLogo()}</div>
       <div className="flex items-center gap-4 z-20">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl">
-              <Menu className="w-6 h-6 text-white" />
-            </Button>
+            <Button variant="ghost" size="icon" className="w-12 h-12 bg-zinc-900/60 border-2 border-white/10 rounded-2xl shadow-xl"><Menu className="w-6 h-6 text-black" /></Button>
           </SheetTrigger>
           <SheetContent side="right" className="bg-[#0a0a15] border-white/10 p-6 w-[400px] shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col gap-8">
-            <SheetHeader className="sr-only">
-               <SheetTitle>Menu</SheetTitle>
-            </SheetHeader>
+            <SheetHeader className="sr-only"><SheetTitle>Menu</SheetTitle></SheetHeader>
             <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-4">
-                {renderProfile()}
-              </div>
-              <div className="flex items-center gap-4">
-                {renderNotifications()}
-                {renderAdminBtn()}
-                {renderCommandBtn()}
-                {renderFullscreenBtn()}
-              </div>
+              <div className="flex items-center gap-4">{renderProfile()}</div>
+              <div className="flex items-center gap-4">{renderNotifications()}{renderAdminBtn()}{renderCommandBtn()}{renderFullscreenBtn()}</div>
               <div className="h-0.5 bg-white/10 w-full" />
-              <div>
-                <h3 className="text-sm font-black uppercase italic tracking-widest text-white/40 mb-4">Apps</h3>
-                <AppLauncherContent router={router} />
-              </div>
+              <div><h3 className="text-sm font-black uppercase italic tracking-widest text-white/40 mb-4">Apps</h3><AppLauncherContent router={router} /></div>
             </div>
           </SheetContent>
         </Sheet>
@@ -560,147 +453,70 @@ export function Header() {
 
   const renderLeftLayout = () => (
     <>
-      <div className="flex items-center gap-4 z-20">
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-        {renderCommandBtn()}
-        {renderFullscreenBtn()}
-        {renderNotifications()}
-        {renderAdminBtn()}
-        {renderProfile()}
-      </div>
-      <div className="flex items-center gap-6 z-20">
-        {showLogo && renderLogo()}
-      </div>
+      <div className="flex items-center gap-4 z-20">{renderAppsLauncher()}{renderPinnedApps()}{renderCommandBtn()}{renderFullscreenBtn()}{renderNotifications()}{renderAdminBtn()}{renderProfile()}</div>
+      <div className="flex items-center gap-6 z-20">{showLogo && renderLogo()}</div>
     </>
   );
 
   const renderRightLayout = () => (
     <>
-      <div className="flex items-center gap-6 z-20">
-        {showLogo && renderLogo()}
-      </div>
-      <div className="flex items-center gap-4 z-20">
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-        {renderCommandBtn()}
-        {renderFullscreenBtn()}
-        {renderNotifications()}
-        {renderAdminBtn()}
-        {renderProfile()}
-      </div>
+      <div className="flex items-center gap-6 z-20">{showLogo && renderLogo()}</div>
+      <div className="flex items-center gap-4 z-20">{renderAppsLauncher()}{renderPinnedApps()}{renderCommandBtn()}{renderFullscreenBtn()}{renderNotifications()}{renderAdminBtn()}{renderProfile()}</div>
     </>
   );
 
   const renderGoogleLayout = () => (
     <>
-      <div className="flex items-center gap-6 z-20">
-        {showLogo && renderLogo()}
-      </div>
-      <div className="flex items-center gap-4 z-20">
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-        {renderProfile()}
-      </div>
+      <div className="flex items-center gap-6 z-20">{showLogo && renderLogo()}</div>
+      <div className="flex items-center gap-4 z-20">{renderAppsLauncher()}{renderPinnedApps()}{renderProfile()}</div>
     </>
   );
 
   const renderDefaultLayout = () => (
     <>
-      <div className="flex items-center gap-4 z-20">
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-        {renderCommandBtn()}
-        {renderFullscreenBtn()}
-      </div>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-        {showLogo && renderLogo()}
-      </div>
-      <div className="flex items-center gap-6 z-20">
-        {renderNotifications()}
-        {renderAdminBtn()}
-        {renderProfile()}
-      </div>
+      <div className="flex items-center gap-4 z-20">{renderAppsLauncher()}{renderPinnedApps()}{renderCommandBtn()}{renderFullscreenBtn()}</div>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">{showLogo && renderLogo()}</div>
+      <div className="flex items-center gap-6 z-20">{renderNotifications()}{renderAdminBtn()}{renderProfile()}</div>
     </>
   );
 
   const renderMacosLayout = () => (
     <>
-      <div className="flex items-center gap-3 z-20">
-        {showLogo && renderLogo()}
-        <div className="w-px h-6 bg-white/10 mx-2" />
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-      </div>
-      <div className="flex items-center gap-3 z-20">
-        {renderCommandBtn()}
-        {renderFullscreenBtn()}
-        {renderNotifications()}
-        {renderAdminBtn()}
-        {renderProfile()}
-      </div>
+      <div className="flex items-center gap-3 z-20">{showLogo && renderLogo()}<div className="w-px h-6 bg-white/10 mx-2" />{renderAppsLauncher()}{renderPinnedApps()}</div>
+      <div className="flex items-center gap-3 z-20">{renderCommandBtn()}{renderFullscreenBtn()}{renderNotifications()}{renderAdminBtn()}{renderProfile()}</div>
     </>
   );
 
   const renderFloatingLayout = () => (
     <div className="w-fit mx-auto bg-black/60 backdrop-blur-2xl border-2 border-white/10 rounded-full px-4 py-2 flex items-center gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 mt-4 pointer-events-auto">
-       {showLogo && renderLogo()}
-       <div className="w-px h-6 bg-white/10 mx-2 hidden sm:block" />
-       {renderAppsLauncher()}
-       {renderPinnedApps()}
-       <div className="w-px h-6 bg-white/10 mx-2 hidden sm:block" />
-       {renderCommandBtn()}
-       {renderNotifications()}
-       {renderProfile()}
+      {showLogo && renderLogo()}<div className="w-px h-6 bg-white/10 mx-2 hidden sm:block" />{renderAppsLauncher()}{renderPinnedApps()}<div className="w-px h-6 bg-white/10 mx-2 hidden sm:block" />{renderCommandBtn()}{renderNotifications()}{renderProfile()}
     </div>
   );
 
   const renderCenteredLayout = () => (
     <>
-      <div className="flex items-center gap-4 z-20 flex-1 justify-start">
-        {renderAppsLauncher()}
-        {renderPinnedApps()}
-        {renderCommandBtn()}
-        {renderFullscreenBtn()}
-      </div>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-        {showLogo && renderLogo()}
-      </div>
-      <div className="flex items-center gap-4 z-20 flex-1 justify-end">
-        {renderNotifications()}
-        {renderAdminBtn()}
-        {renderProfile()}
-      </div>
+      <div className="flex items-center gap-4 z-20 flex-1 justify-start">{renderAppsLauncher()}{renderPinnedApps()}{renderCommandBtn()}{renderFullscreenBtn()}</div>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">{showLogo && renderLogo()}</div>
+      <div className="flex items-center gap-4 z-20 flex-1 justify-end">{renderNotifications()}{renderAdminBtn()}{renderProfile()}</div>
     </>
   );
 
   const renderLayoutContent = () => {
     switch (headerStyle) {
-      case 'hamburger':
-        return renderHamburgerLayout();
-      case 'left':
-        return renderLeftLayout();
-      case 'right':
-        return renderRightLayout();
-      case 'google':
-        return renderGoogleLayout();
-      case 'macos':
-        return renderMacosLayout();
-      case 'floating':
-        return renderFloatingLayout();
-      case 'centered':
-        return renderCenteredLayout();
+      case 'hamburger': return renderHamburgerLayout();
+      case 'left': return renderLeftLayout();
+      case 'right': return renderRightLayout();
+      case 'google': return renderGoogleLayout();
+      case 'macos': return renderMacosLayout();
+      case 'floating': return renderFloatingLayout();
+      case 'centered': return renderCenteredLayout();
       case 'default':
-      default:
-        return renderDefaultLayout();
+      default: return renderDefaultLayout();
     }
   };
 
   return (
-    <header className={cn(
-      "h-20 bg-black/40 backdrop-blur-2xl sticky top-0 z-50 px-10 border-b-2 border-white/10 shadow-[0_10px_50px_rgba(0,0,0,0.4)] transition-all duration-300",
-      headerStyle === 'floating' && "bg-transparent border-none shadow-none px-4 pt-4 pointer-events-none"
-    )}>
+    <header className={cn("h-20 bg-white border-b-2 border-black/10 sticky top-0 z-50 px-10 shadow-[0_10px_50px_rgba(0,0,0,0.08)] transition-all duration-300", headerStyle === 'floating' && "bg-transparent border-none shadow-none px-4 pt-4 pointer-events-none")}>
       <div className={cn("max-w-[1800px] mx-auto h-full flex items-center relative", headerStyle === 'centered' ? "justify-between" : "justify-between")}>
         {renderLayoutContent()}
       </div>
