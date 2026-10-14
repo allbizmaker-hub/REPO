@@ -24,7 +24,7 @@ export default function Loading() {
       <div className="flex flex-col items-center space-y-16 relative z-10">
         <div className="relative group">
           <div className="absolute -inset-20 bg-primary/30 blur-[120px] rounded-full animate-pulse" />
-          <img src="/Copilot_20260202_133906.png" alt="Xakteir X" className="w-40 h-40 object-cover rounded" />
+          <img src="/xakteir-mark.svg" alt="Xakteir X" width={160} height={160} className="w-40 h-40 object-cover rounded" />
         </div>
         <div className="w-80 space-y-8 flex flex-col items-center">
           <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative border-2 border-white/5 shadow-2xl">
