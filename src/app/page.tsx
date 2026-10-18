@@ -110,7 +110,7 @@ function XakteirDashboard() {
     <div className="min-h-screen flex flex-col items-center animate-fade-in relative overflow-x-hidden text-white pb-32 px-4 md:px-0">
       <main className="flex-1 w-full max-w-7xl px-2 md:px-8 flex flex-col items-center pt-[6vh] md:pt-[12vh] space-y-12 md:space-y-20 relative z-10">
         <div className="flex flex-col items-center gap-6 md:gap-10 group cursor-pointer" onClick={() => window.location.reload()}>
-          <img src="/Copilot_20260202_133906.png" alt="Xakteir X" className="w-20 h-20 md:w-40 md:h-40 object-cover rounded" />
+          <img src="/xakteir-mark.svg" alt="Xakteir X" width={160} height={160} className="w-20 h-20 md:w-40 md:h-40 object-cover rounded" />
           <div className="text-center space-y-3 md:space-y-4">
             <h1 className="text-4xl md:text-9xl font-black tracking-tighter uppercase italic leading-none text-white flex items-center justify-center gap-4 md:gap-8 drop-shadow-[0_0_80px_rgba(255,255,255,0.4)]">
               XAKTEIR <BadgeCheck className="w-6 h-6 md:w-12 md:h-12 text-blue-500 fill-current animate-pulse shadow-2xl" />
